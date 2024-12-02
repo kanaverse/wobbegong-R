@@ -1,0 +1,28 @@
+Package: wobbegong
+Version: 0.2.0
+Date: 2024-12-02
+Title: Cheap-ass Range Requests on Assay Data 
+License: MIT + file LICENSE
+Description:
+    Converts a SingleCellExperiment into a format that can be hosted on a static web server and queried via range requests.
+    This allows developers to build low-maintainence web applications where all the work is done via client-side logic.
+Authors@R: person("Aaron", "Lun", email="infinite.monkeys.with.keyboards@gmail.com", role=c("aut", "cre"))
+Imports:
+    methods,
+    S4Vectors,
+    DelayedArray,
+    SummarizedExperiment,
+    SingleCellExperiment,
+    Rcpp,
+    beachmat,
+    jsonlite
+LinkingTo:
+    Rcpp,
+    beachmat,
+    assorthead
+Suggests:
+    testthat,
+    Matrix
+SystemRequirements: C++17
+RoxygenNote: 7.3.2
+Encoding: UTF-8

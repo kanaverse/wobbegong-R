@@ -1,5 +1,7 @@
 # Format SummarizedExperiments for HTTP range requests
 
+![R CMD check](https://github.com/kanaverse/wobbegong-R/actions/workflows/r-cmd-check.yaml/badge.svg)
+
 ## Overview
 
 The **wobbegong** R package converts SummarizedExperiment objects into files that can be easily accessed via HTTP range requests.
@@ -23,6 +25,8 @@ wobbegongify(my_se, "/my/server/directory")
 ```
 
 This will dump a whole bunch of files at the specified directory, which can be accessed with [**wobbegong.js**](https://github.com/kanaverse/wobbegong.js).
+
+Check out the [reference documentation](https://kanaverse.github.io/wobbegong-R) for more details.
 
 ## Directory structure
 

@@ -1,0 +1,55 @@
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+name: Build pkgdown
+
+jobs:
+  build:
+    name: Build pkgdown
+    runs-on: ubuntu-latest
+    container: bioconductor/bioconductor_docker:devel
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y rsync
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Set directories
+        run: |
+          echo "R_PKG_DIR=${R_HOME}/site-library" >> $GITHUB_ENV
+
+      - name: Restore the package directory
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.R_PKG_DIR }}
+          key: pkgdown-packages
+
+      - name: Install dependencies
+        shell: Rscript {0}
+        run: |
+          stuff <- read.dcf("DESCRIPTION")
+          stuff <- stuff[,intersect(colnames(stuff), c("Imports", "LinkingTo", "Suggests", "Depends"))]
+          deps <- sub(" .*", "", unlist(strsplit(stuff, ",\\s*"), use.names=FALSE))
+          BiocManager::install(c("pkgdown", deps))
+
+      - name: Install self
+        run: R CMD INSTALL .
+
+      - name: Build site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        shell: Rscript {0}
+
+      - name: Deploy to GitHub pages 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          clean: false
+          branch: gh-pages
+          folder: docs
+

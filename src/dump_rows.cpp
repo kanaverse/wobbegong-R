@@ -94,7 +94,7 @@ Rcpp::List dump_dense_rows(Rcpp::RObject mat, std::string output_file, std::stri
 
         double& sum = rowsums[r];
         int& count = rownnz[r];
-        if (sexp_type == INTSXP || sexp_type == LGLSXP) {
+        if (sexp_type == INTSXP) {
             for (int c = 0; c < NC; ++c) {
                 auto val = ptr[c];
                 if (val != static_cast<double>(NA_INTEGER)) {
@@ -104,10 +104,20 @@ Rcpp::List dump_dense_rows(Rcpp::RObject mat, std::string output_file, std::stri
                     colnnz[c] += (val != 0);
                 }
             }
+        } else if (sexp_type == LGLSXP) {
+            for (int c = 0; c < NC; ++c) {
+                auto val = ptr[c];
+                if (val != static_cast<double>(NA_LOGICAL)) {
+                    sum += val;
+                    count += (val != 0);
+                    colsums[c] += val;
+                    colnnz[c] += (val != 0);
+                }
+            }
         } else {
             for (int c = 0; c < NC; ++c) {
                 auto val = ptr[c];
-                if (!std::isnan(val)) {
+                if (!ISNAN(val)) {
                     sum += val;
                     count += (val != 0);
                     colsums[c] += val;
@@ -175,10 +185,21 @@ Rcpp::List dump_sparse_rows(Rcpp::RObject mat, std::string output_file, std::str
                     colnnz[c] += (val != 0);
                 }
             }
+        } else if (sexp_type == LGLSXP) {
+            for (int i = 0; i < range.number; ++i) {
+                auto val = range.value[i];
+                if (val != static_cast<double>(NA_LOGICAL)) {
+                    sum += val;
+                    count += (val != 0);
+                    auto c = range.index[i];
+                    colsums[c] += val;
+                    colnnz[c] += (val != 0);
+                }
+            }
         } else {
             for (int i = 0; i < range.number; ++i) {
                 auto val = range.value[i];
-                if (!std::isnan(val)) {
+                if (!ISNA(val)) {
                     sum += val;
                     count += (val != 0);
                     auto c = range.index[i];

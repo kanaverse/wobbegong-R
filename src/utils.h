@@ -5,7 +5,7 @@
 
 template<typename T>
 uint8_t transfer_boolean(T val) {
-    if (val == static_cast<T>(NA_INTEGER)) {
+    if (val == static_cast<T>(NA_LOGICAL)) {
         return 2;
     } else {
         return val > 0;

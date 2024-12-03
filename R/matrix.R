@@ -9,7 +9,7 @@ wobbegongify_matrix <- function(x, path) {
 
     # Making life simpler and just realizing everything so we aren't
     # excessively punished for poor access patterns with file-backed matrices.
-    ptr <- initializeCpp(x, memorize=TRUE, hdf5.realize=TRUE, tiledb.realize=TRUE)
+    ptr <- initializeCpp(x, .check.na=FALSE, memorize=TRUE, hdf5.realize=TRUE, tiledb.realize=TRUE)
     rtype <- translate_type(type(x))
     overall <- list(byte_order = get_byte_order(), row_count = nrow(x), column_count = ncol(x), type = rtype)
 

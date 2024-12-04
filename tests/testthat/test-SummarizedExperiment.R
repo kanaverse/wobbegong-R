@@ -41,25 +41,25 @@ test_that("SummarizedExperiment staging with rownames and column data", {
 
 test_that("ignoring SummarizedExperiment assays", {
     tmp <- tempfile()
-    wobbegong:::wobbegongify_SummarizedExperiment(se, tmp, dense.assays=FALSE)
+    wobbegong:::wobbegongify_SummarizedExperiment(se, tmp, assay.check=function(i, n, x) DelayedArray::is_sparse(x))
     summary <- jsonlite::fromJSON(file.path(tmp, "summary.json"))
     expect_equal(length(summary$assay_names), 0L) 
 
     tmp <- tempfile()
     assay(se, withDimnames=FALSE) <- Matrix::rsparsematrix(nrow(se), ncol(se), density=0.1)
-    wobbegong:::wobbegongify_SummarizedExperiment(se, tmp, dense.assays=FALSE)
+    wobbegong:::wobbegongify_SummarizedExperiment(se, tmp, assay.check=function(i, n, x) DelayedArray::is_sparse(x))
     summary <- jsonlite::fromJSON(file.path(tmp, "summary.json"))
     expect_equal(summary$assay_names, "counts")
 
     tmp <- tempfile()
-    wobbegong:::wobbegongify_SummarizedExperiment(se, tmp, sparse.assays=FALSE)
+    wobbegong:::wobbegongify_SummarizedExperiment(se, tmp, assay.check=function(i, n, x) !DelayedArray::is_sparse(x))
     summary <- jsonlite::fromJSON(file.path(tmp, "summary.json"))
     expect_equal(summary$assay_names, "logcounts")
 
     tmp <- tempfile()
     assay(se, 1, withDimnames=FALSE) <- matrix("A", nrow(se), ncol(se))
     assay(se, 2, withDimnames=FALSE) <- array("A", c(nrow(se), ncol(se), 2L))
-    wobbegong:::wobbegongify_SummarizedExperiment(se, tmp)
+    expect_warning(wobbegong:::wobbegongify_SummarizedExperiment(se, tmp), "skipping assay")
     summary <- jsonlite::fromJSON(file.path(tmp, "summary.json"))
     expect_equal(length(summary$assay_names), 0L) 
 })

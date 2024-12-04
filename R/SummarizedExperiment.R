@@ -1,6 +1,6 @@
 #' @import SummarizedExperiment
 #' @import SingleCellExperiment
-wobbegongify_SummarizedExperiment <- function(x, path, deposit = TRUE, dense.assays=TRUE, sparse.assays=TRUE) {
+wobbegongify_SummarizedExperiment <- function(x, path, deposit = TRUE, assay.check = NULL) {
     dir.create(path, showWarnings=FALSE)
 
     has_row_data <- !is.null(rownames(x)) || ncol(rowData(x)) > 0
@@ -20,12 +20,17 @@ wobbegongify_SummarizedExperiment <- function(x, path, deposit = TRUE, dense.ass
 
     for (i in seq_along(assay.names)) {
         current <- assay(x, i, withDimnames=FALSE)
-        if (length(dim(current)) == 2L && type(current) %in% c("double", "integer", "logical")) {
-            sparse <- is_sparse(current)
-            if ((dense.assays && !sparse) || (sparse.assays && sparse)) {
-                keep[i] <- TRUE
-                wobbegongify_matrix(current, file.path(assay.dir, i - 1L))
-            }
+        if (length(dim(current)) != 2L) {
+            warning("skipping assay '", assay.names[i], "' with more than 2 dimensions");
+            next
+        }
+        if (!(type(current) %in% c("double", "integer", "logical"))) {
+            warning("skipping assay '", assay.names[i], "' that is not numeric or logical");
+            next
+        }
+        if (is.null(assay.check) || assay.check(i, assay.names[i], current)) {
+            keep[i] <- TRUE
+            wobbegongify_matrix(current, file.path(assay.dir, i - 1L))
         }
     }
 

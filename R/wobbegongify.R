@@ -5,10 +5,9 @@
 #' @param x A supported R object, typically a SummarizedExperiment or an instance of one of its subclasses.
 #' @param path String containing a path to the directory to dump \code{x}.
 #' @param ... Additional arguments for specific methods.
-#' @param dense.assays Logical scalar indicating whether to save dense assays.
-#' If \code{FALSE}, dense assays are skipped.
-#' @param sparse.assays Logical scalar indicating whether to save dense assays.
-#' If \code{FALSE}, sparse assays are skipped.
+#' @param SummarizedExperiment.assay.check Function that accepts the index of the assay, the name of the assay, and the assay matrix.
+#' It should return a logical scalar specifying whether to save the assay; if \code{FALSE}, the assay is skipped.
+#' If \code{NULL}, no assays are skipped.
 #'
 #' @return \code{path} is populated with the contents of \code{x}.
 #' \code{NULL} is returned invisibly.
@@ -43,15 +42,15 @@ setGeneric("wobbegongify", function(x, path, ...) standardGeneric("wobbegongify"
 
 #' @export
 #' @rdname wobbegongify
-setMethod("wobbegongify", "SummarizedExperiment", function(x, path, dense.assays=TRUE, sparse.assays=TRUE, ...) {
-    wobbegongify_SummarizedExperiment(x, path, dense.assays=dense.assays, sparse.assays=sparse.assays)
+setMethod("wobbegongify", "SummarizedExperiment", function(x, path, SummarizedExperiment.assay.check=NULL, ...) {
+    wobbegongify_SummarizedExperiment(x, path, assay.check=SummarizedExperiment.assay.check)
 })
 
 #' @export
 #' @rdname wobbegongify
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
-setMethod("wobbegongify", "SingleCellExperiment", function(x, path, dense.assays=TRUE, sparse.assays=TRUE, ...) {
-    wobbegongify_SingleCellExperiment(x, path, dense.assays=dense.assays, sparse.assays=sparse.assays)
+setMethod("wobbegongify", "SingleCellExperiment", function(x, path, SummarizedExperiment.assay.check=NULL, ...) {
+    wobbegongify_SingleCellExperiment(x, path, assay.check=SummarizedExperiment.assay.check)
 })
 
 #' @export

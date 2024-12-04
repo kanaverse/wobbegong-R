@@ -9,24 +9,22 @@
 \usage{
 wobbegongify(x, path, ...)
 
-\S4method{wobbegongify}{SummarizedExperiment}(x, path, dense.assays = TRUE, sparse.assays = TRUE, ...)
+\S4method{wobbegongify}{SummarizedExperiment}(x, path, SummarizedExperiment.assay.check = NULL, ...)
 
-\S4method{wobbegongify}{SingleCellExperiment}(x, path, dense.assays = TRUE, sparse.assays = TRUE, ...)
+\S4method{wobbegongify}{SingleCellExperiment}(x, path, SummarizedExperiment.assay.check = NULL, ...)
 
 \S4method{wobbegongify}{DataFrame}(x, path, ...)
 }
 \arguments{
-\item{x}{A supported R object, typically a SummarizedExperiment or an instance of one of its subclasses.}
+\item{x}{A supported R object, typically a \link[SummarizedExperiment]{SummarizedExperiment} or an instance of one of its subclasses.}
 
 \item{path}{String containing a path to the directory to dump \code{x}.}
 
 \item{...}{Additional arguments for specific methods.}
 
-\item{dense.assays}{Logical scalar indicating whether to save dense assays.
-If \code{FALSE}, dense assays are skipped.}
-
-\item{sparse.assays}{Logical scalar indicating whether to save dense assays.
-If \code{FALSE}, sparse assays are skipped.}
+\item{SummarizedExperiment.assay.check}{Function that accepts the index of the assay, the name of the assay, and the assay matrix.
+It should return a logical scalar specifying whether to save the assay; if \code{FALSE}, the assay is skipped.
+If \code{NULL}, no assays are skipped.}
 }
 \value{
 \code{path} is populated with the contents of \code{x}.
@@ -34,6 +32,13 @@ If \code{FALSE}, sparse assays are skipped.}
 }
 \description{
 Dump an object to disk in the \pkg{wobbegong} format for easy HTTP range requests.
+}
+\details{
+For SummarizedExperiment objects, assays will be skipped if they are not 2-dimensional matrix-like objects of integer, logical or numeric type (according to \code{\link[DelayedArray]{type}}).
+Assays will also be skipped if \code{SummarizedExperiment.assay.check} is supplied and does not return \code{TRUE} when called with the assay's details.
+
+When passing \link[S4Vectors]{DataFrame} objects as \code{x}, columns will be skipped if they are not atomic (i.e., integer, logical, numeric or character).
+Factors will be automatically converted into character vectors.
 }
 \examples{
 library(SingleCellExperiment)

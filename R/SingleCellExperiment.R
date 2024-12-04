@@ -2,6 +2,7 @@
 #' @importFrom DelayedArray type
 wobbegongify_SingleCellExperiment <- function(x, path, deposit = TRUE, ...) {
     summ <- wobbegongify_SummarizedExperiment(x, path, deposit = FALSE, ...)
+    summ$object <- "single_cell_experiment"
 
     # Handling the reduced dimensions.
     rdnames <- reducedDimNames(x) 

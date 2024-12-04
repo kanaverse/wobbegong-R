@@ -9,6 +9,7 @@ test_that("naked SingleCellExperiment staging", {
     wobbegong:::wobbegongify_SingleCellExperiment(sce, tmp)
 
     summary <- jsonlite::fromJSON(file.path(tmp, "summary.json"))
+    expect_identical(summary$object, "single_cell_experiment")
     expect_false(summary$has_row_data)
     expect_false(summary$has_column_data)
     expect_equal(summary$row_count, nrow(sce))

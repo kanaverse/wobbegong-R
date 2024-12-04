@@ -47,10 +47,10 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">wobbegongify</span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
-<span><span class="fu">wobbegongify</span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span>, dense.assays <span class="op">=</span> <span class="cn">TRUE</span>, sparse.assays <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">wobbegongify</span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span>, SummarizedExperiment.assay.check <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'SingleCellExperiment'</span></span>
-<span><span class="fu">wobbegongify</span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span>, dense.assays <span class="op">=</span> <span class="cn">TRUE</span>, sparse.assays <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">wobbegongify</span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span>, SummarizedExperiment.assay.check <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DataFrame'</span></span>
 <span><span class="fu">wobbegongify</span><span class="op">(</span><span class="va">x</span>, <span class="va">path</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -61,7 +61,7 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A supported R object, typically a SummarizedExperiment or an instance of one of its subclasses.</p></dd>
+<dd><p>A supported R object, typically a <a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">SummarizedExperiment</a> or an instance of one of its subclasses.</p></dd>
 
 
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
@@ -72,20 +72,23 @@
 <dd><p>Additional arguments for specific methods.</p></dd>
 
 
-<dt id="arg-dense-assays">dense.assays<a class="anchor" aria-label="anchor" href="#arg-dense-assays"></a></dt>
-<dd><p>Logical scalar indicating whether to save dense assays.
-If <code>FALSE</code>, dense assays are skipped.</p></dd>
-
-
-<dt id="arg-sparse-assays">sparse.assays<a class="anchor" aria-label="anchor" href="#arg-sparse-assays"></a></dt>
-<dd><p>Logical scalar indicating whether to save dense assays.
-If <code>FALSE</code>, sparse assays are skipped.</p></dd>
+<dt id="arg-summarizedexperiment-assay-check">SummarizedExperiment.assay.check<a class="anchor" aria-label="anchor" href="#arg-summarizedexperiment-assay-check"></a></dt>
+<dd><p>Function that accepts the index of the assay, the name of the assay, and the assay matrix.
+It should return a logical scalar specifying whether to save the assay; if <code>FALSE</code>, the assay is skipped.
+If <code>NULL</code>, no assays are skipped.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     <p><code>path</code> is populated with the contents of <code>x</code>.
 <code>NULL</code> is returned invisibly.</p>
+    </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>For SummarizedExperiment objects, assays will be skipped if they are not 2-dimensional matrix-like objects of integer, logical or numeric type (according to <code><a href="https://rdrr.io/pkg/BiocGenerics/man/type.html" class="external-link">type</a></code>).
+Assays will also be skipped if <code>SummarizedExperiment.assay.check</code> is supplied and does not return <code>TRUE</code> when called with the assay's details.</p>
+<p>When passing <a href="https://rdrr.io/pkg/S4Vectors/man/DataFrame-class.html" class="external-link">DataFrame</a> objects as <code>x</code>, columns will be skipped if they are not atomic (i.e., integer, logical, numeric or character).
+Factors will be automatically converted into character vectors.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

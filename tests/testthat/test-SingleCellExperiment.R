@@ -59,3 +59,29 @@ test_that("SingleCellExperiment staging with reduced dimensions", {
         expect_identical(expected2[,2], read_integer(rd2.path, starts[2], rd2$column_bytes[2]))
     }
 })
+
+test_that("SingleCellExperiment staging with alternative experiments", {
+    copy <- sce
+    altExp(copy, "ERCC") <- sce[1:3,]
+    altExp(copy, "ADT") <- sce[4:10,]
+
+    tmp <- tempfile()
+    wobbegong:::wobbegongify_SingleCellExperiment(copy, tmp)
+
+    summary <- jsonlite::fromJSON(file.path(tmp, "summary.json"))
+    expect_equal(summary$alternative_experiment_names, c("ERCC", "ADT"))
+
+    {
+        ae1.dir <- file.path(tmp, "alternative_experiments", "0")
+        ae1 <- jsonlite::fromJSON(file.path(ae1.dir, "summary.json"))
+        expect_identical(ae1$row_count, 3L)
+        expect_identical(ae1$column_count, ncol(sce))
+    }
+
+    {
+        ae2.dir <- file.path(tmp, "alternative_experiments", "1")
+        ae2 <- jsonlite::fromJSON(file.path(ae2.dir, "summary.json"))
+        expect_identical(ae2$row_count, 7L)
+        expect_identical(ae2$column_count, ncol(sce))
+    }
+})

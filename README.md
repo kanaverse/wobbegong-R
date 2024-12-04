@@ -51,6 +51,8 @@ This will have the following properties:
 - `assay_names`: array of strings, the assay names.
 - `reduced_dimension_names`: array of strings, the names of the reduced dimensions.
   Only available when `object` is `"single_cell_experiment"`.
+- `alternative_experiment_names`: array of strings, the names of the alternative experiments.
+  Only available when `object` is `"single_cell_experiment"`.
 
 If `has_row_data = true`, a `{DIR}/row_data` subdirectory will be present, containing the row annotations in the [DataFrame directory layout](#for-a-dataframe).
 
@@ -64,9 +66,13 @@ For each element of `assay_names`, a subdirectory will be present at `{DIR}/assa
 (For example, the first assay would be present at `{DIR}/assays/0`.)
 This subdirectory uses the [assay matrix directory layout](#for-an-assay-matrix).
 
-For each element of `reduced_dimensions`, a subdirectory will be present at `{DIR}/reduced_dimensions/{i}` where `i` is the zero-based index within `reduced_dimensions`.
+For each element of `reduced_dimensions`, a subdirectory will be present at `{DIR}/reduced_dimensions/{i}` where `i` is the zero-based index within `reduced_dimension_names`.
 (For example, the first reduced dimensionality result would be present at `{DIR}/reduced_dimensions/0`.)
 This subdirectory uses the [reduced dimension directory layout](#for-reduced-dimensions).
+
+For each element of `alternative_experiments`, a subdirectory will be present at `{DIR}/alternative_experiments/{i}` where `i` is the zero-based index within `alternative_experiment_names`.
+(For example, the first alternative experiment would be present at `{DIR}/alternative_experiment/0`.)
+This subdirectory uses the same SummarizedExperiment directory layout described above.
 
 ### For a DataFrame
 

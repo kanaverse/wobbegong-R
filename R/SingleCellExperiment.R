@@ -3,6 +3,7 @@
 wobbegongify_SingleCellExperiment <- function(x, path, deposit = TRUE, ...) {
     summ <- wobbegongify_SummarizedExperiment(x, path, deposit = FALSE, ...)
 
+    # Handling the reduced dimensions.
     rdnames <- reducedDimNames(x) 
     summ$reduced_dimension_names <- I(rdnames)
     rdpath <- file.path(path, "reduced_dimensions")
@@ -28,6 +29,18 @@ wobbegongify_SingleCellExperiment <- function(x, path, deposit = TRUE, ...) {
         )
 
         write(toJSON(rdsummary, auto_unbox=TRUE), file=file.path(curdir, "summary.json"))
+    }
+
+    # Handling the alternative experiments.
+    aenames <- altExpNames(x) 
+    summ$alternative_experiment_names <- I(aenames)
+    aepath <- file.path(path, "alternative_experiments")
+    dir.create(aepath, showWarnings=FALSE)
+
+    for (ai in seq_along(aenames)) {
+        curdir <- file.path(aepath, ai - 1L)
+        ae <- altExp(x, aenames[ai], withDimnames=FALSE)
+        wobbegongify(ae, curdir, ...)
     }
 
     if (deposit) {

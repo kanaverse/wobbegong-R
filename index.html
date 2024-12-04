@@ -105,12 +105,15 @@
 <code>assay_names</code>: array of strings, the assay names.</li>
 <li>
 <code>reduced_dimension_names</code>: array of strings, the names of the reduced dimensions. Only available when <code>object</code> is <code>"single_cell_experiment"</code>.</li>
+<li>
+<code>alternative_experiment_names</code>: array of strings, the names of the alternative experiments. Only available when <code>object</code> is <code>"single_cell_experiment"</code>.</li>
 </ul>
 <p>If <code>has_row_data = true</code>, a <code>{DIR}/row_data</code> subdirectory will be present, containing the row annotations in the <a href="#for-a-dataframe">DataFrame directory layout</a>.</p>
 <p>If <code>has_column_data = true</code>, a <code>{DIR}/column_data</code> subdirectory will be present, containing the column annotations in the <a href="#for-a-dataframe">DataFrame directory layout</a>.</p>
 <p>Any assay with more than two dimensions is not converted and is automatically excluded from <code>assay_names</code>. Any non-integer, non-logical or non-double assays are also ignored. Sparse and dense assays may be additionally excluded based on options in <code><a href="reference/wobbegongify.html">wobbegongify()</a></code>.</p>
 <p>For each element of <code>assay_names</code>, a subdirectory will be present at <code>{DIR}/assays/{i}</code> where <code>i</code> is the zero-based index within <code>assay_names</code>. (For example, the first assay would be present at <code>{DIR}/assays/0</code>.) This subdirectory uses the <a href="#for-an-assay-matrix">assay matrix directory layout</a>.</p>
-<p>For each element of <code>reduced_dimensions</code>, a subdirectory will be present at <code>{DIR}/reduced_dimensions/{i}</code> where <code>i</code> is the zero-based index within <code>reduced_dimensions</code>. (For example, the first reduced dimensionality result would be present at <code>{DIR}/reduced_dimensions/0</code>.) This subdirectory uses the <a href="#for-reduced-dimensions">reduced dimension directory layout</a>.</p>
+<p>For each element of <code>reduced_dimensions</code>, a subdirectory will be present at <code>{DIR}/reduced_dimensions/{i}</code> where <code>i</code> is the zero-based index within <code>reduced_dimension_names</code>. (For example, the first reduced dimensionality result would be present at <code>{DIR}/reduced_dimensions/0</code>.) This subdirectory uses the <a href="#for-reduced-dimensions">reduced dimension directory layout</a>.</p>
+<p>For each element of <code>alternative_experiments</code>, a subdirectory will be present at <code>{DIR}/alternative_experiments/{i}</code> where <code>i</code> is the zero-based index within <code>alternative_experiment_names</code>. (For example, the first alternative experiment would be present at <code>{DIR}/alternative_experiment/0</code>.) This subdirectory uses the same SummarizedExperiment directory layout described above.</p>
 </div>
 <div class="section level3">
 <h3 id="for-a-dataframe">For a DataFrame<a class="anchor" aria-label="anchor" href="#for-a-dataframe"></a>

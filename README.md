@@ -182,9 +182,10 @@ The length of the array is guaranteed to be equal to `row_count`.
 ## Data encoding
 
 Integer data (`"integer"`) are encoded as a DEFLATE-compressed array of 32-bit signed integers in the specified `byte_order`.
+It is expected that integers are using a two's complement representation.
 Missing values are represented as -2147483648.
 
-Double-precision data (`"double"`) are encoded as a DEFLATE-compressed array of 64-bit IEEE double-precision floats in the specified `byte_order`.
+Double-precision data (`"double"`) are encoded as a DEFLATE-compressed array of 64-bit IEEE754 double-precision floats in the specified `byte_order`.
 This may contain IEEE special values like NaN and infinity.
 Missing values are encoded as NaN with a payload of 1954, inherited from R
 (see discussion [here](https://stackoverflow.com/questions/70471859/difference-between-na-real-and-nan/70472081#70472081)).

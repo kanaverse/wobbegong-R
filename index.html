@@ -222,8 +222,8 @@
 <div class="section level2">
 <h2 id="data-encoding">Data encoding<a class="anchor" aria-label="anchor" href="#data-encoding"></a>
 </h2>
-<p>Integer data (<code>"integer"</code>) are encoded as a DEFLATE-compressed array of 32-bit signed integers in the specified <code>byte_order</code>. Missing values are represented as -2147483648.</p>
-<p>Double-precision data (<code>"double"</code>) are encoded as a DEFLATE-compressed array of 64-bit IEEE double-precision floats in the specified <code>byte_order</code>. This may contain IEEE special values like NaN and infinity. Missing values are encoded as NaN with a payload of 1954, inherited from R (see discussion <a href="https://stackoverflow.com/questions/70471859/difference-between-na-real-and-nan/70472081#70472081" class="external-link">here</a>).</p>
+<p>Integer data (<code>"integer"</code>) are encoded as a DEFLATE-compressed array of 32-bit signed integers in the specified <code>byte_order</code>. It is expected that integers are using a two’s complement representation. Missing values are represented as -2147483648.</p>
+<p>Double-precision data (<code>"double"</code>) are encoded as a DEFLATE-compressed array of 64-bit IEEE754 double-precision floats in the specified <code>byte_order</code>. This may contain IEEE special values like NaN and infinity. Missing values are encoded as NaN with a payload of 1954, inherited from R (see discussion <a href="https://stackoverflow.com/questions/70471859/difference-between-na-real-and-nan/70472081#70472081" class="external-link">here</a>).</p>
 <p>Boolean data (<code>"boolean"</code>) are encoded as a DEFLATE-compressed array of 8-bit unsigned integers. Values of 0 represent false, values of 1 represent true, and values of 2 are missing.</p>
 <p>String data (<code>"string"</code>) are encoded as a DEFLATE-compressed array of null-terminated strings. Each string can be assumed to follow the UTF-8 character encoding. Missing values are represented by the Unicode replacement character (<code>U+FFFD</code>).</p>
 </div>

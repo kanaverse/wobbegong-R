@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">wobbegong</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -75,8 +75,12 @@
 <p>Then, we call the <code><a href="reference/wobbegongify.html">wobbegongify()</a></code> function on our SummarizedExperiment of interest:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">wobbegong</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/wobbegongify.html">wobbegongify</a></span><span class="op">(</span><span class="va">my_se</span>, <span class="st">"/my/server/directory"</span><span class="op">)</span></span></code></pre></div>
-<p>This will dump a whole bunch of files at the specified directory, which can be accessed with <a href="https://github.com/kanaverse/wobbegong.js" class="external-link"><strong>wobbegong.js</strong></a>.</p>
+<span><span class="fu"><a href="reference/wobbegongify.html">wobbegongify</a></span><span class="op">(</span><span class="va">my_se</span>, <span class="st">"/my/server/directory/se"</span><span class="op">)</span></span></code></pre></div>
+<p>This will dump a whole bunch of files at the specified directory, which can be accessed with <a href="https://github.com/kanaverse/wobbegong.js" class="external-link"><strong>wobbegong.js</strong></a>. We can also directly <code><a href="reference/wobbegongify.html">wobbegongify()</a></code> a DataFrame:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/S4Vectors" class="external-link">S4Vectors</a></span><span class="op">)</span></span>
+<span><span class="va">my_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/DataFrame-class.html" class="external-link">DataFrame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, b <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/wobbegongify.html">wobbegongify</a></span><span class="op">(</span><span class="va">my_df</span>, <span class="st">"/my/server/directory/df"</span><span class="op">)</span></span></code></pre></div>
 <p>Check out the <a href="https://kanaverse.github.io/wobbegong-R" class="external-link">reference documentation</a> for more details.</p>
 </div>
 <div class="section level2">
@@ -88,6 +92,8 @@
 <p>The top-level directory (referred to here as <code>{DIR}</code>) has a number of files and subdirectories. The most important is <code>{DIR}/summary.json</code>, which provides a summary of the SummarizedExperiment’s components. This will have the following properties:</p>
 <ul>
 <li>
+<code>object</code>: string, one of <code>"summarized_experiment"</code> or <code>"single_cell_experiment"</code>.</li>
+<li>
 <code>row_count</code>: integer, the number of rows.</li>
 <li>
 <code>column_count</code>: integer, the number of columns.</li>
@@ -98,7 +104,7 @@
 <li>
 <code>assay_names</code>: array of strings, the assay names.</li>
 <li>
-<code>reduced_dimension_names</code>: array of strings, the names of the reduced dimensions. Only available for <code>SingleCellExperiment</code> objects.</li>
+<code>reduced_dimension_names</code>: array of strings, the names of the reduced dimensions. Only available when <code>object</code> is <code>"single_cell_experiment"</code>.</li>
 </ul>
 <p>If <code>has_row_data = true</code>, a <code>{DIR}/row_data</code> subdirectory will be present, containing the row annotations in the <a href="#for-a-dataframe">DataFrame directory layout</a>.</p>
 <p>If <code>has_column_data = true</code>, a <code>{DIR}/column_data</code> subdirectory will be present, containing the column annotations in the <a href="#for-a-dataframe">DataFrame directory layout</a>.</p>
@@ -111,6 +117,8 @@
 </h3>
 <p>Each DataFrame directory contains a <code>summary.json</code> file and a <code>content</code> file. The <code>summary.json</code> file has the following properties:</p>
 <ul>
+<li>
+<code>object</code>: string, set to <code>"data_frame"</code>.</li>
 <li>
 <code>byte_order</code>: string, the byte order used for <a href="#data-encoding">encoding</a>.</li>
 <li>
@@ -137,6 +145,8 @@
 </h3>
 <p>Each assay matrix directory contains a <code>summary.json</code> file, a <code>content</code> file and <code>stats</code> file. The <code>summary.json</code> file has the following properties:</p>
 <ul>
+<li>
+<code>object</code>: string, set to <code>"matrix"</code>.</li>
 <li>
 <code>byte_order</code>: string, the byte order used for <a href="#data-encoding">encoding</a>.</li>
 <li>

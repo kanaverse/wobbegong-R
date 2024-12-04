@@ -30,6 +30,7 @@ wobbegongify_SummarizedExperiment <- function(x, path, deposit = TRUE, dense.ass
     }
 
     summary <- list(
+        object = "summarized_experiment",
         row_count = nrow(x),
         column_count = ncol(x),
         has_row_data = has_row_data,

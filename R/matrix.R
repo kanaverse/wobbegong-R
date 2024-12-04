@@ -11,7 +11,14 @@ wobbegongify_matrix <- function(x, path) {
     # excessively punished for poor access patterns with file-backed matrices.
     ptr <- initializeCpp(x, .check.na=FALSE, memorize=TRUE, hdf5.realize=TRUE, tiledb.realize=TRUE)
     rtype <- translate_type(type(x))
-    overall <- list(byte_order = get_byte_order(), row_count = nrow(x), column_count = ncol(x), type = rtype)
+
+    overall <- list(
+        object = "matrix",
+        byte_order = get_byte_order(), 
+        row_count = nrow(x), 
+        column_count = ncol(x), 
+        type = rtype
+    )
 
     if (!is_sparse(x)) {
         details <- dump_dense_rows(ptr, con, rtype)

@@ -21,10 +21,17 @@ Then, we call the `wobbegongify()` function on our SummarizedExperiment of inter
 
 ```r
 library(wobbegong)
-wobbegongify(my_se, "/my/server/directory")
+wobbegongify(my_se, "/my/server/directory/se")
 ```
 
 This will dump a whole bunch of files at the specified directory, which can be accessed with [**wobbegong.js**](https://github.com/kanaverse/wobbegong.js).
+We can also directly `wobbegongify()` a DataFrame:
+
+```r
+library(S4Vectors)
+my_df <- DataFrame(a = 1:5, b = LETTERS[1:5])
+wobbegongify(my_df, "/my/server/directory/df")
+```
 
 Check out the [reference documentation](https://kanaverse.github.io/wobbegong-R) for more details.
 
@@ -36,13 +43,14 @@ The top-level directory (referred to here as `{DIR}`) has a number of files and 
 The most important is `{DIR}/summary.json`, which provides a summary of the SummarizedExperiment's components.
 This will have the following properties:
 
+- `object`: string, one of `"summarized_experiment"` or `"single_cell_experiment"`.
 - `row_count`: integer, the number of rows.
 - `column_count`: integer, the number of columns.
 - `has_row_data`: boolean, whether any row annotations are available.
 - `has_column_data`: boolean, whether any column annotations are available.
 - `assay_names`: array of strings, the assay names.
 - `reduced_dimension_names`: array of strings, the names of the reduced dimensions.
-  Only available for `SingleCellExperiment` objects.
+  Only available when `object` is `"single_cell_experiment"`.
 
 If `has_row_data = true`, a `{DIR}/row_data` subdirectory will be present, containing the row annotations in the [DataFrame directory layout](#for-a-dataframe).
 
@@ -65,6 +73,7 @@ This subdirectory uses the [reduced dimension directory layout](#for-reduced-dim
 Each DataFrame directory contains a `summary.json` file and a `content` file.
 The `summary.json` file has the following properties:
 
+- `object`: string, set to `"data_frame"`.
 - `byte_order`: string, the byte order used for [encoding](#data-encoding).
 - `row_count`: integer, the number of rows in the DataFrame.
 - `has_row_names`: boolean, whether row names are present in the DataFrame.
@@ -90,6 +99,7 @@ The length of the decoded array is guaranteed to be the same length as `row_coun
 Each assay matrix directory contains a `summary.json` file, a `content` file and `stats` file.
 The `summary.json` file has the following properties:
 
+- `object`: string, set to `"matrix"`.
 - `byte_order`: string, the byte order used for [encoding](#data-encoding).
 - `row_count`: integer, the number of rows in the matrix.
 - `column_count`: integer, the number of rows in the matrix.

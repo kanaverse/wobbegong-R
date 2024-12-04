@@ -1,9 +1,10 @@
-#' Dump a SummarizedExperiment to disk
+#' Convert an object to the wobbegong format
 #'
-#' Dump a \link[SummarizedExperiment]{SummarizedExperiment} (or one of its subclasses) to disk in the \pkg{wobbegong} format for easy HTTP range requests.
+#' Dump an object to disk in the \pkg{wobbegong} format for easy HTTP range requests.
 #'
-#' @param x A SummarizedExperiment or an instance of one of its subclasses.
+#' @param x A supported R object, typically a SummarizedExperiment or an instance of one of its subclasses.
 #' @param path String containing a path to the directory to dump \code{x}.
+#' @param ... Additional arguments for specific methods.
 #' @param dense.assays Logical scalar indicating whether to save dense assays.
 #' If \code{FALSE}, dense assays are skipped.
 #' @param sparse.assays Logical scalar indicating whether to save dense assays.
@@ -34,14 +35,27 @@
 #' tmp <- tempfile()
 #' wobbegongify(se, tmp)
 #' list.files(tmp, recursive=TRUE)
+#'
 #' @export
 #' @import methods
+#' @name wobbegongify
+setGeneric("wobbegongify", function(x, path, ...) standardGeneric("wobbegongify"))
+
+#' @export
+#' @rdname wobbegongify
+setMethod("wobbegongify", "SummarizedExperiment", function(x, path, dense.assays=TRUE, sparse.assays=TRUE, ...) {
+    wobbegongify_SummarizedExperiment(x, path, dense.assays=dense.assays, sparse.assays=sparse.assays)
+})
+
+#' @export
+#' @rdname wobbegongify
 #' @importClassesFrom SingleCellExperiment SingleCellExperiment
-wobbegongify <- function(x, path, dense.assays=TRUE, sparse.assays=TRUE) {
-    if (is(x, "SingleCellExperiment")) {
-        wobbegongify_SingleCellExperiment(x, path, dense.assays=dense.assays, sparse.assays=sparse.assays)
-    } else {
-        wobbegongify_SummarizedExperiment(x, path, dense.assays=dense.assays, sparse.assays=sparse.assays)
-    }
-    invisible(NULL)
-}
+setMethod("wobbegongify", "SingleCellExperiment", function(x, path, dense.assays=TRUE, sparse.assays=TRUE, ...) {
+    wobbegongify_SingleCellExperiment(x, path, dense.assays=dense.assays, sparse.assays=sparse.assays)
+})
+
+#' @export
+#' @rdname wobbegongify
+setMethod("wobbegongify", "DataFrame", function(x, path, ...) {
+    wobbegongify_DataFrame(x, path, ...)
+})

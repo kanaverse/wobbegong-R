@@ -4,6 +4,7 @@
 #' @useDynLib wobbegong
 wobbegongify_DataFrame <- function(x, path) {
     summary <- list(
+        object = "data_frame",
         byte_order = get_byte_order(),
         row_count = nrow(x), 
         has_row_names = !is.null(rownames(x))

@@ -1,6 +1,6 @@
 Package: wobbegong
-Version: 0.2.0
-Date: 2024-12-02
+Version: 0.2.1
+Date: 2024-12-04
 Title: Cheap-ass Range Requests on Assay Data 
 License: MIT + file LICENSE
 Description:

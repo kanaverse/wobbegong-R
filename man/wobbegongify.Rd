@@ -2,14 +2,25 @@
 % Please edit documentation in R/wobbegongify.R
 \name{wobbegongify}
 \alias{wobbegongify}
-\title{Dump a SummarizedExperiment to disk}
+\alias{wobbegongify,SummarizedExperiment-method}
+\alias{wobbegongify,SingleCellExperiment-method}
+\alias{wobbegongify,DataFrame-method}
+\title{Convert an object to the wobbegong format}
 \usage{
-wobbegongify(x, path, dense.assays = TRUE, sparse.assays = TRUE)
+wobbegongify(x, path, ...)
+
+\S4method{wobbegongify}{SummarizedExperiment}(x, path, dense.assays = TRUE, sparse.assays = TRUE, ...)
+
+\S4method{wobbegongify}{SingleCellExperiment}(x, path, dense.assays = TRUE, sparse.assays = TRUE, ...)
+
+\S4method{wobbegongify}{DataFrame}(x, path, ...)
 }
 \arguments{
-\item{x}{A SummarizedExperiment or an instance of one of its subclasses.}
+\item{x}{A supported R object, typically a SummarizedExperiment or an instance of one of its subclasses.}
 
 \item{path}{String containing a path to the directory to dump \code{x}.}
+
+\item{...}{Additional arguments for specific methods.}
 
 \item{dense.assays}{Logical scalar indicating whether to save dense assays.
 If \code{FALSE}, dense assays are skipped.}
@@ -22,7 +33,7 @@ If \code{FALSE}, sparse assays are skipped.}
 \code{NULL} is returned invisibly.
 }
 \description{
-Dump a \link[SummarizedExperiment]{SummarizedExperiment} (or one of its subclasses) to disk in the \pkg{wobbegong} format for easy HTTP range requests.
+Dump an object to disk in the \pkg{wobbegong} format for easy HTTP range requests.
 }
 \examples{
 library(SingleCellExperiment)
@@ -45,6 +56,7 @@ se <- SingleCellExperiment(
 tmp <- tempfile()
 wobbegongify(se, tmp)
 list.files(tmp, recursive=TRUE)
+
 }
 \author{
 Aaron Lun

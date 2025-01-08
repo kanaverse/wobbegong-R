@@ -63,5 +63,5 @@ setMethod("wobbegongify", "SingleCellExperiment", function(x, path, SummarizedEx
 #' @export
 #' @rdname wobbegongify
 setMethod("wobbegongify", "DataFrame", function(x, path, ...) {
-    wobbegongify_DataFrame(x, path, ...)
+    wobbegongify_DataFrame(x, path)
 })

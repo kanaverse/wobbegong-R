@@ -79,7 +79,8 @@ Rcpp::List dump_dense_rows(Rcpp::RObject mat, std::string output_file, std::stri
     int NR = mptr->nrow();
     int NC = mptr->ncol();
 
-    byteme::RawFileWriter ohandle(output_file);
+    byteme::RawFileWriterOptions opt;
+    byteme::RawFileWriter ohandle(output_file, opt);
     Rcpp::IntegerVector payloads(NR);
     Rcpp::NumericVector rowsums(NR), colsums(NC);
     Rcpp::IntegerVector rownnz(NR), colnnz(NC);

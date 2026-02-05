@@ -10,7 +10,8 @@
 //[[Rcpp::export(rng=false)]]
 Rcpp::IntegerVector dump_list_of_vectors(Rcpp::List incoming, std::string output_file) {
     size_t nelements = incoming.size();
-    byteme::RawFileWriter ohandle(output_file);
+    byteme::RawFileWriterOptions opt;
+    byteme::RawFileWriter ohandle(output_file.c_str(), opt);
     Rcpp::IntegerVector collected(nelements);
 
     std::vector<char> str_buffer;
@@ -20,7 +21,9 @@ Rcpp::IntegerVector dump_list_of_vectors(Rcpp::List incoming, std::string output
     for (size_t e = 0; e < nelements; ++e) {
         Rcpp::RObject current(incoming[e]);
         int vtype = current.sexp_type();
-        byteme::ZlibBufferWriter writer(/* mode = */ 0);
+        byteme::ZlibBufferWriterOptions zopt;
+        zopt.mode = 0;
+        byteme::ZlibBufferWriter writer(zopt);
 
         switch (vtype) {
             case INTSXP:

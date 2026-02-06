@@ -10,9 +10,11 @@
 #include <cstdint>
 
 std::vector<unsigned char> recompress(const std::string& path, std::vector<unsigned char>& buffer, const unsigned char* leftovers, const std::pair<size_t, size_t>& leftover_offsets) {
-  byteme::ZlibBufferWriterOptions zopt;
-  zopt.mode = 0;
-  byteme::ZlibBufferWriter writer(zopt);
+  byteme::ZlibBufferWriter writer([&](){
+      byteme::ZlibBufferWriterOptions zopt;
+      zopt.mode = 0;
+      return zopt;
+  }());
 
     if (std::filesystem::exists(path)) {
         auto handle = std::fopen(path.c_str(), "rb");
@@ -79,8 +81,7 @@ Rcpp::List dump_dense_rows(Rcpp::RObject mat, std::string output_file, std::stri
     int NR = mptr->nrow();
     int NC = mptr->ncol();
 
-    byteme::RawFileWriterOptions opt;
-    byteme::RawFileWriter ohandle(output_file.c_str(), opt);
+    byteme::RawFileWriter ohandle(output_file.c_str(), {});
     Rcpp::IntegerVector payloads(NR);
     Rcpp::NumericVector rowsums(NR), colsums(NC);
     Rcpp::IntegerVector rownnz(NR), colnnz(NC);
@@ -131,9 +132,11 @@ Rcpp::List dump_dense_rows(Rcpp::RObject mat, std::string output_file, std::stri
 
         // Using raw DELATE here.
         auto transferred = transfer_values(ptr, NC, sexp_type, int_buffer, lgl_buffer);
-        byteme::ZlibBufferWriterOptions zopt;
-        zopt.mode = 0;
-        byteme::ZlibBufferWriter writer(zopt);
+        byteme::ZlibBufferWriter writer([&](){
+            byteme::ZlibBufferWriterOptions zopt;
+            zopt.mode = 0;
+            return zopt;
+        }());
         writer.write(transferred.first, transferred.second);
         writer.finish();
 
@@ -161,8 +164,7 @@ Rcpp::List dump_sparse_rows(Rcpp::RObject mat, std::string output_file, std::str
     int NR = mptr->nrow();
     int NC = mptr->ncol();
 
-    byteme::RawFileWriterOptions opt;
-    byteme::RawFileWriter ohandle(output_file.c_str(), opt);
+    byteme::RawFileWriter ohandle(output_file.c_str(), {});
     Rcpp::IntegerVector vpayload(NR), ipayload(NR);
     Rcpp::NumericVector rowsums(NR), colsums(NC);
     Rcpp::IntegerVector rownnz(NR), colnnz(NC);
@@ -215,9 +217,11 @@ Rcpp::List dump_sparse_rows(Rcpp::RObject mat, std::string output_file, std::str
             }
         }
 
-        byteme::ZlibBufferWriterOptions vwriter_opt;
-        vwriter_opt.mode = 0;
-        byteme::ZlibBufferWriter vwriter(vwriter_opt);
+        byteme::ZlibBufferWriter vwriter([&](){
+            byteme::ZlibBufferWriterOptions opt;
+            opt.mode = 0;
+            return opt;
+        }());
         vwriter.write(transferred.first, transferred.second);
         vwriter.finish();
 
@@ -228,9 +232,11 @@ Rcpp::List dump_sparse_rows(Rcpp::RObject mat, std::string output_file, std::str
             }
         }
 
-        byteme::ZlibBufferWriterOptions iwriter_opt;
-        iwriter_opt.mode = 0;
-        byteme::ZlibBufferWriter iwriter(iwriter_opt);
+        byteme::ZlibBufferWriter iwriter([&](){
+            byteme::ZlibBufferWriterOptions opt;
+            opt.mode = 0;
+            return opt;
+        }());
         iwriter.write(reinterpret_cast<const unsigned char*>(int_buffer.data()), range.number * sizeof(int32_t));
         iwriter.finish();
 

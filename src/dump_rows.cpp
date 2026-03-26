@@ -12,7 +12,7 @@
 std::vector<unsigned char> recompress(const std::string& path, std::vector<unsigned char>& buffer, const unsigned char* leftovers, const std::pair<size_t, size_t>& leftover_offsets) {
   byteme::ZlibBufferWriter writer([&](){
       byteme::ZlibBufferWriterOptions zopt;
-      zopt.mode = 0;
+      zopt.mode = byteme::ZlibCompressionMode::DEFLATE;
       return zopt;
   }());
 
@@ -134,7 +134,7 @@ Rcpp::List dump_dense_rows(Rcpp::RObject mat, std::string output_file, std::stri
         auto transferred = transfer_values(ptr, NC, sexp_type, int_buffer, lgl_buffer);
         byteme::ZlibBufferWriter writer([&](){
             byteme::ZlibBufferWriterOptions zopt;
-            zopt.mode = 0;
+            zopt.mode = byteme::ZlibCompressionMode::DEFLATE;
             return zopt;
         }());
         writer.write(transferred.first, transferred.second);
@@ -219,7 +219,7 @@ Rcpp::List dump_sparse_rows(Rcpp::RObject mat, std::string output_file, std::str
 
         byteme::ZlibBufferWriter vwriter([&](){
             byteme::ZlibBufferWriterOptions opt;
-            opt.mode = 0;
+            opt.mode = byteme::ZlibCompressionMode::DEFLATE;
             return opt;
         }());
         vwriter.write(transferred.first, transferred.second);
@@ -234,7 +234,7 @@ Rcpp::List dump_sparse_rows(Rcpp::RObject mat, std::string output_file, std::str
 
         byteme::ZlibBufferWriter iwriter([&](){
             byteme::ZlibBufferWriterOptions opt;
-            opt.mode = 0;
+            opt.mode = byteme::ZlibCompressionMode::DEFLATE;
             return opt;
         }());
         iwriter.write(reinterpret_cast<const unsigned char*>(int_buffer.data()), range.number * sizeof(int32_t));

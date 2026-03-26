@@ -14,15 +14,15 @@ Rcpp::IntegerVector dump_list_of_vectors(Rcpp::List incoming, std::string output
     Rcpp::IntegerVector collected(nelements);
 
     std::vector<char> str_buffer;
-    std::vector<int32_t> int_buffer;
-    std::vector<uint8_t> lgl_buffer;
+    std::vector<std::int32_t> int_buffer;
+    std::vector<std::uint8_t> lgl_buffer;
 
     for (size_t e = 0; e < nelements; ++e) {
         Rcpp::RObject current(incoming[e]);
         int vtype = current.sexp_type();
         byteme::ZlibBufferWriter writer([&](){
             byteme::ZlibBufferWriterOptions zopt;
-            zopt.mode = 0;
+            zopt.mode = byteme::ZlibCompressionMode::DEFLATE;
             return zopt;
         }());
 

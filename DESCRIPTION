@@ -1,6 +1,6 @@
 Package: wobbegong
-Version: 0.2.4
-Date: 2026-02-06
+Version: 0.2.5
+Date: 2026-03-26
 Title: Cheap-ass Range Requests on Assay Data 
 License: MIT + file LICENSE
 Description:
@@ -19,7 +19,7 @@ Imports:
 LinkingTo:
     Rcpp,
     beachmat,
-    assorthead
+    assorthead (>= 1.5.14)
 Suggests:
     testthat,
     Matrix
